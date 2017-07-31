@@ -15,7 +15,10 @@ tests :
 9. tester aussi un mot de passe avec la confirmation du mot de passe erronée
 
 BDD : importer localhost.sql
+
 unicité d'email et de nick.
+
+http://jacoop.naytheet.fr/bootstrap/
 
 site testé d'abord en local puis en sous domaine de mon site pro avec restriction d'accès pour les robots.
 =======
