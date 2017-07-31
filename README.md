@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 jacoop - notes
 
 tests :
@@ -17,3 +18,6 @@ BDD : importer localhost.sql
 unicité d'email et de nick.
 
 site testé d'abord en local puis en sous domaine de mons site pro avec restriction d'accès pour les robots.
+=======
+# jacoop
+>>>>>>> bef1573f65741683715354e2c555b0d3197eae15
