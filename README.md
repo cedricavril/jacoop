@@ -16,11 +16,24 @@ tests :
 
 BDD : importer localhost.sql
 
-unicité d'email et de nick.
-
 http://jacoop.naytheet.fr/bootstrap/
 
 site testé d'abord en local puis en sous domaine de mon site pro avec restriction d'accès pour les robots.
+
+
+00:20
+
+résultats des tests : 
+1. ok
+2. ok
+3. ok
+4. ok
+5. ok (erreur = utilisateur déjà existant ou déjà enregistré)
+6. ok
+7. ok
+8. ok
+9. ok
+
 =======
 # jacoop
 >>>>>>> bef1573f65741683715354e2c555b0d3197eae15

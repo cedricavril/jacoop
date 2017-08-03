@@ -18,28 +18,15 @@ catch(PDOException $e) {
 }
 
 function requeteSql($req, $erreur, $param = null) {
-	// continuer ici : pour insertion, voir quelle code erreur correspond à exception d'unicité et retourner ce dernier
 	global $db;
-
-var_dump('un test t1 avec '.$req);
 
 	try {
 		$result = $db->prepare($req);
 		$result->execute($param);
 	}
 	catch(PDOException $e) {
-			$result = $e->erreurInfo[1];
-			echo "erreur : ".$result;
+			// pour l'insertion, on a une erreur de code 1062 déclenchée pour une violation d'unicité, qui sera retournée à la place de true
+			$result = ($e->errorInfo[1] == 1062) ? 1062 : $result;
 		}
 	return $result;
-}
-
-function searchName($name) {
-global $db;
-
-};
-
-function saveName($name) {
-global $db;
-
 };
