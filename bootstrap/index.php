@@ -1,4 +1,6 @@
 <?php session_start();
+if (isset($_SESSION['nick'])) header('location: contact.php');
+
 include "../bdd/pdoManager.php";
 
 // sécurité : mettre un htaccess deny all dans bdd.
@@ -16,7 +18,8 @@ if($nick && $pwd) {
   if(requeteSql("UPDATE users SET actif=TRUE WHERE nick=:nick AND email=:email AND pwd=:pwd","erreur update",array(":email" => $email, ":nick" => $nick, ":pwd" => $pwd))->rowCount() == 1) $flash = 'Utilisateur enregistré.';
   else $errorFlash = "Utilisateur déjà enregistré ou déjà existant. Essayez de vous connecter ou réinscrivez vous.";
 
-} else {
+} elseif(isset($_POST['SoumettreEnregistrement'])) {
+  // 2. ou bien traitement des variables post d'enregistrement éventuelles : on enregistre un utilisateur si ce dernier a rempli tous les champs et on laisse son compte inactif par défaut
 
   // initialisation
   $nick = isset($_POST['nick']) ? $_POST['nick'] : null;
@@ -24,41 +27,46 @@ if($nick && $pwd) {
   $pwd = isset($_POST['pwd']) ? $_POST['pwd'] : null;
   $pwd2 = isset($_POST['pwd2']) ? $_POST['pwd2'] : null;
 
-  // 2. ou bien traitement des variables post d'enregistrement éventuelles : on enregistre un utilisateur si ce dernier a rempli tous les champs et on laisse son compte inactif par défaut
-  if(isset($_POST['SoumettreEnregistrement'])) {
+  // si la saisie n'est pas complète, message d'erreur correspondant
+  if(!$pwd || !$nick || !$email || !$pwd2) $errorFlash = "Merci de remplir tous les champs";
+  elseif ($pwd != $pwd2) $errorFlash = "Les mots de passe ne correspondent pas";
+  else {
+    var_dump("mot de passe à enregistrer : $pwd");
+    $pwd = password_hash($pwd, PASSWORD_DEFAULT);
+    var_dump("mot de passe à enregistrer crypté: $pwd");
 
-    // si la saisie n'est pas complète, message d'erreur correspondant
-    if(!$pwd || !$nick || !$email || !$pwd2) $errorFlash = "Merci de remplir tous les champs";
-    elseif ($pwd != $pwd2) $errorFlash = "Les mots de passe ne correspondent pas";
-    else {
-      $pwd = crypt($pwd);
+    // si l'utilisateur ou l'email existe déjà et est non activé, on efface les lignes correspondantes au nick ou à l'email
+    if (requeteSql("SELECT * FROM users WHERE actif=0 AND (email='$email' OR nick='$nick')", "erreur lecture")->fetchall()) requeteSql("DELETE FROM users WHERE actif=0 AND (email='$email' OR nick='$nick')", "erreur suppression");
 
-      // si l'utilisateur ou l'email existe déjà et est non activé, on efface les lignes correspondantes au nick ou à l'email
-      if (requeteSql("SELECT * FROM users WHERE actif=0 AND (email='$email' OR nick='$nick')", "erreur lecture")->fetchall()) requeteSql("DELETE FROM users WHERE actif=0 AND (email='$email' OR nick='$nick')", "erreur suppression");
-
-      // S'il est activé, on a violation d'unicité.
-      if (requeteSql("INSERT INTO users (nick,email,pwd) VALUES ('$nick','$email','$pwd')", "erreur insertion bdd") === 1062) 
-        $errorFlash = "Utilisateur déjà existant";
-      else // sinon, message d'invitation à valider son email contenant le lien avec le mdp crypté
-        $flash = "Login validé. Merci de confirmer votre enregistrement en cliquant sur le lien envoyé sur votre boite mail. <a href='?pwd=$pwd&nick=$nick&email=$email'>lien</a>";
-    }
-  } else {
-    // 3. ou bien vérification du login si saisi
-    if(isset($_POST['SoumettreConnexion'])) {
-      $nick = isset($_POST['nickConnexion']) ? $_POST['nickConnexion'] : null;
-      $pwd = isset($_POST['pwdConnexion']) ? crypt($_POST['pwdConnexion']) : null;  
-
-  /*    if($test) {
-        $errorFlash = "utilisateur inconnu";
-      }*/
-    }
+    // S'il est activé, on a violation d'unicité.
+    if (requeteSql("INSERT INTO users (nick,email,pwd) VALUES ('$nick','$email','$pwd')", "erreur insertion bdd") === 1062) 
+      $errorFlash = "Utilisateur déjà existant";
+    else // sinon, message d'invitation à valider son email contenant le lien avec le mdp crypté
+      $flash = "Login validé. Merci de confirmer votre enregistrement en cliquant sur le lien envoyé sur votre boite mail. <a href='?pwd=$pwd&nick=$nick&email=$email'>lien</a>";
   }
+} elseif(isset($_POST['SoumettreConnexion'])) {
+    // 2.1 ou bien traitement des variables post de connexion on initialise la session d'un utilisateur si ce dernier existe dans la bdd, sinon message d'erreur correspondant
+    $nickOuEmail = isset($_POST['nickOuEmail']) ? $_POST['nickOuEmail'] : null;
+    $pwd = isset($_POST['pwd']) ? $_POST['pwd'] : null;
+
+// on peut avoir un problème ici si un utilisateur choisi un email comme mot de passe. Il faudrait interdire le caractère "@" dans ce dernier lors de l'enregistrement pour lever toute ambigüité
+    $user = requeteSql("SELECT * FROM users WHERE (email='$nickOuEmail' OR nick='$nickOuEmail') AND actif=TRUE", "erreur lecture bdd 2")->fetch(PDO::FETCH_OBJ);
+
+    if ($user->nick && password_verify($pwd,$user->pwd)) {
+      $flash = "Vous êtes connecté.";
+      $_SESSION['nick'] = $user->nick;
+      $_SESSION['email'] = $user->email;
+      $_SESSION['id'] = $user->id;
+    } else {
+      $errorFlash = "Identifiants incorrects";
+    }
+
 }
 
 if (isset($_GET['connexion'])) $page = "connexion";
 if (isset($_GET['contact'])) $page = "contact";
 
-// 4. on pourrait en profiter pour nettoyer la bdd si des comptes sont restés inactifs trop longtemps (nécessiterait une colonne date)
+// 3. on pourrait en profiter pour nettoyer la bdd si des comptes sont restés inactifs trop longtemps (nécessiterait une colonne date)
 ?>
 <!DOCTYPE html>
 <html lang="fr-FR">
@@ -102,8 +110,8 @@ if (isset($_GET['contact'])) $page = "contact";
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li <?php if($page == 'enregistrement') echo 'class="active"'; ?>><a href="index.php">S'enregistrer</a></li>
-            <li <?php if($page == 'connexion') echo 'class="active"'; ?>><a href="?connexion=1">Se connecter</a></li>
-            <li <?php if($page == 'contact') echo 'class="active"'; ?>><a href="?contact=1">Contact</a></li>
+            <li <?php if($page == 'connexion') echo 'class="active"'; ?>><a href="?connexion">Se connecter</a></li>
+            <li <?php if($page == 'contact') echo 'class="active"'; ?>><a href="?contact">Contact</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -127,11 +135,12 @@ if (isset($_GET['contact'])) $page = "contact";
 
 /* VIEW.
 on charge le contenu selon dans l'ordre : 
+qu'on soit connecté,
 qu'on veuille confirmer un email, 
 qu'on veuille s'enregistrer, 
+qu'on veuille se connecter ou
 qu'on arrive tout frais sur la page.
 */
-
 switch (true) {
   case isset($_GET['nick']):
     if(!isset($flash) && !isset($errorFlash)) {
@@ -147,7 +156,7 @@ switch (true) {
   case isset($_POST['nick']):
     include "view/enregistrementEmail.php";
   break;
-  case isset($_POST['nickConnexion']):
+  case isset($_POST['SoumettreConnexion']) || ($page == "connexion"):
     include "view/formulaireConnexion.php";
   break;
   default:

@@ -20,9 +20,6 @@ http://jacoop.naytheet.fr/bootstrap/
 
 site testé d'abord en local puis en sous domaine de mon site pro avec restriction d'accès pour les robots.
 
-
-00:20
-
 résultats des tests : 
 1. ok
 2. ok
@@ -33,6 +30,10 @@ résultats des tests :
 7. ok
 8. ok
 9. ok
+
+temps de travail à rajouter : 2h + 1h + 1h
+
+15h30
 
 =======
 # jacoop

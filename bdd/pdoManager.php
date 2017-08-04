@@ -25,8 +25,8 @@ function requeteSql($req, $erreur, $param = null) {
 		$result->execute($param);
 	}
 	catch(PDOException $e) {
-			// pour l'insertion, on a une erreur de code 1062 déclenchée pour une violation d'unicité, qui sera retournée à la place de true
-			$result = ($e->errorInfo[1] == 1062) ? 1062 : $result;
+			// pour l'insertion, on a une erreur de code 1062 déclenchée pour une violation d'unicité, qui sera retournée à la place de false si autre erreur
+			return $result = ($e->errorInfo[1] == 1062) ? 1062 : false;
 		}
 	return $result;
 };
