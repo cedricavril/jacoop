@@ -78,9 +78,9 @@
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>email</th>
-        <th>sujet</th>
-        <th>message</th>
+        <th class="col-xs-2 col-sm-2 col-lg-2">email</th>
+        <th class="col-xs-2 col-sm-2 col-lg-2">sujet</th>
+        <th class="col-xs-8 col-sm-8 col-lg-8">message</th>
       </tr>
     </thead>
     <tbody>
@@ -96,8 +96,6 @@ echo "
     </tbody>
   </table>
 </div>
-
-
 
 <fieldset class="form-group col-xs-12 col-sm-12 col-lg-12">
     <legend>Envoyer un mail</legend>

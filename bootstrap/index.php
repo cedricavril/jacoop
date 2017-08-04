@@ -124,11 +124,11 @@ if (isset($_GET['contact'])) $page = "contact";
       </div>
 <!-- affichage d'une notification éventuelle -->
 <?php if(isset($flash)) { ?>
-  <div class="alert alert-success">
+  <div class="alert alert-success col-xs-4 col-sm-4 col-lg-4 col-xs-offset-4 col-sm-offset-4 col-lg-offset-4">
     <strong>Opération effectuée</strong> <?= $flash; ?>
   </div>
 <?php } elseif (isset($errorFlash)) { ?>
-  <div class="alert alert-danger">
+  <div class="alert alert-danger col-xs-4 col-sm-4 col-lg-4 col-xs-offset-4 col-sm-offset-4 col-lg-offset-4">
     <strong>Erreur</strong> <?= $errorFlash; ?>
   </div>
 <?php } 
@@ -146,7 +146,7 @@ switch (true) {
     if(!isset($flash) && !isset($errorFlash)) {
       $errorFlash = "Le lien sur lequel vous avez cliqué contient une erreur. Réssayez de vous connecter ou réinscrivez-vous.";
 ?>
-  <div class="alert alert-danger">
+  <div class="alert alert-danger col-xs-4 col-sm-4 col-lg-4 col-xs-offset-4 col-sm-offset-4 col-lg-offset-4">
     <strong>Erreur</strong> <?= $errorFlash; ?>
   </div>
 <?php
