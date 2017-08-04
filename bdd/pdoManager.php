@@ -5,7 +5,7 @@ try {
 		$db = new \PDO('mysql:host=localhost;dbname=jacoop', 'user1', 'pass') or die("plantage");
 	} else {
 		// ne sert pas ici
-		$db = new \PDO('mysql:host=atelierggsgab.mysql.db;dbname=', '', '') or die("plantage de la bdd");
+//		$db = new \PDO('mysql:host=atelierggsgab.mysql.db;dbname=', '', '') or die("plantage de la bdd");
 	}
 	$db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 	$db->exec("SET CHARACTER SET utf8");

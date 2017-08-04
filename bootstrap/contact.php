@@ -20,7 +20,7 @@
 		$errorFlash = "Des champs sont manquants";
 	}
 
-    $mails = requeteSql("SELECT *,LEFT(content,2) as preview FROM mails WHERE (id_user=$id)", "erreur lecture bdd mails")->fetchAll(PDO::FETCH_OBJ);
+    $mails = requeteSql("SELECT *,LEFT(content,50) as preview FROM mails WHERE (id_user=$id)", "erreur lecture bdd mails")->fetchAll(PDO::FETCH_OBJ);
 ?>
 
 <!DOCTYPE html>
