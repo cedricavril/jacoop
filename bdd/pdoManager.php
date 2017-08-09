@@ -1,5 +1,5 @@
 <?php
-// ouverture de la bdd en local ----
+// ouverture de la bdd en local -
 try {
 	if ($_SERVER["REMOTE_ADDR"]=='127.0.0.1') { 
 		$db = new \PDO('mysql:host=localhost;dbname=jacoop', 'user1', 'pass') or die("plantage");
