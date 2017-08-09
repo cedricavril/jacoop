@@ -102,14 +102,14 @@ echo "
 
 <!-- affichage d'une notification éventuelle -->
 <?php if(isset($flash)) { ?>
-  <div class="alert alert-success alert-dismissible fade in col-xs-4 col-sm-4 col-lg-4 col-xs-offset-4 col-sm-offset-4 col-lg-offset-4">
+  <div class="alert alert-success alert-dismissible fade in col-xs-12 col-sm-4 col-lg-4 col-sm-offset-4 col-lg-offset-4">
     <strong>Opération effectuée</strong> <?= $flash; ?>
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 		<span aria-hidden="true">&times;</span>
 	</button>
   </div>
 <?php } elseif (isset($errorFlash)) { ?>
-  <div class="alert alert-danger alert-dismissible fade in col-xs-4 col-sm-4 col-lg-4 col-xs-offset-4 col-sm-offset-4 col-lg-offset-4 alert-dismissible">
+  <div class="alert alert-danger alert-dismissible fade in col-xs-12 col-sm-4 col-lg-4 col-sm-offset-4 col-lg-offset-4 alert-dismissible">
     <strong>Erreur</strong> <?= $errorFlash; ?>
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 		<span aria-hidden="true">&times;</span>
@@ -118,19 +118,19 @@ echo "
 <?php } ?>
 
     <form method="post">
-	    <div class="form-group col-xs-4 col-sm-4 col-lg-4 col-xs-offset-4 col-sm-offset-4 col-lg-offset-4">
+	    <div class="form-group col-xs-12 col-sm-4 col-lg-4 col-sm-offset-4 col-lg-offset-4">
 	      <label for="email">Email :</label>
 	      <input type="email" class="form-control" id="email" name="email" placeholder="Saisir l'email">
 	    </div>
-	    <div class="form-group col-xs-4 col-sm-4 col-lg-4 col-xs-offset-4 col-sm-offset-4 col-lg-offset-4">
+	    <div class="form-group col-xs-12 col-sm-4 col-lg-4 col-sm-offset-4 col-lg-offset-4">
 	      <label for="topic">Sujet :</label>
 	      <input type="text" class="form-control" id="topic" name="topic" placeholder="Saisir le topic">
 	    </div>
-	    <div class="form-group col-xs-4 col-sm-4 col-lg-4 col-xs-offset-4 col-sm-offset-4 col-lg-offset-4">
+	    <div class="form-group col-xs-12 col-sm-4 col-lg-4 col-sm-offset-4 col-lg-offset-4">
 	      	<label for="texte">Texte :</label>
 			<textarea class="form-control" id="texte" name="texte" rows="3" placeholder="Saisir le message"></textarea>
 	    </div>
-	      <button class="form-group col-xs-2 col-sm-2 col-lg-2 col-xs-offset-5 col-sm-offset-5 col-lg-offset-5" type="submit" class="btn btn-default" id="SoumettreMail" name="SoumettreMail">Soumettre</button>
+	      <button class="form-group col-xs-12 col-sm-2 col-lg-2 col-sm-offset-5 col-lg-offset-5" type="submit" class="btn btn-default" id="SoumettreMail" name="SoumettreMail">Soumettre</button>
 	</form>
 </fieldset>
 </div>
